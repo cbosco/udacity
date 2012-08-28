@@ -178,13 +178,17 @@ def get_blanks (grid):
 				blanks.append({
 							"x": x,
 							"y": y,
-							"guesses": [],
-							"last_tried": None
+							"guesses": make_rep(),
+							"guessed": make_rep() 
 						})
 	return blanks
 
-def set_valid_guesses (blanks, grid):
-	for blank in blanks:
+def set_valid_guesses (blanks, grid, offset_index = 0):
+	length = len(blanks)
+	index = offset_index
+	print "start at index " + str(index)
+	while (index < length):
+		blank = blanks[index]
 		rep = make_rep()
 		has_possible_guess = False
 		for num in get_row(grid, blank["x"]):
@@ -206,26 +210,29 @@ def set_valid_guesses (blanks, grid):
 				break
 		if has_possible_guess:
 			blank["guesses"] = rep 
+			index += 1
 		else:
+			print "bail at index " + str(index)
 			return False
 
 	# valid guesses for all blanks
+	print "all valid guesses, index hit " + str(index)
 	return True
 
 
 def fill_blanks (blanks, grid):
 	length = len(blanks)
-	print "there are " + str(length) + " blanks"
 	index = 0
 	while (index < length):
 		blank = blanks[index]
+
 		did_fill = False
 		#print str(blank["x"]) + "," + str(blank["y"])
 		for guess in blank["guesses"]:
 			#print "idx: " + str(index) + ", " + str(guess) + ":" + str(blank["guesses"][guess])
-			if (blank["guesses"][guess] == False and guess > blank["last_tried"]):
+			if (blank["guesses"][guess] == False and not blank["guessed"][guess]):
 				grid[blank["x"]][blank["y"]] = guess
-				blank["last_tried"] = guess
+				blank["guessed"][guess] = True
 				did_fill = True
 				print "set blank " + str(index) + " to " + str(guess)
 				break
@@ -234,15 +241,19 @@ def fill_blanks (blanks, grid):
 			# nothing will work
 			print "fail"
 			return False
-		if (did_fill == True and set_valid_guesses(blanks, grid)):
+		if (did_fill == True and set_valid_guesses(blanks, grid, index+1)):
 			index += 1
-			print "inc"
 		else:
 			print "backtrack from " + str(index)
+			last_blank = blanks[index-1]
 			# set to zero and backtrack
+			grid[blank["x"]][blank["y"]] = "X"
+			print print_grid(grid)
 			grid[blank["x"]][blank["y"]] = 0
-			blank["last_tried"] = 0
+			blank["last_blank"] = 0
+			grid[last_blank["x"]][last_blank["y"]] = 0
 			index -= 1
+			set_valid_guesses(blanks, grid, index)
 
 	return check_sudoku(grid)
 
