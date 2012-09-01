@@ -359,7 +359,7 @@ def solve_sudoku (grid):
 		blanks = get_blanks(grid)
 		if (set_valid_guesses(blanks, grid) == True):
 			tries = fill_blanks(grid, blanks)
-		return "(" + str(tries) + " tries)\n" + print_grid(grid)
+		return grid
 		
 	else:
 		return is_valid
@@ -561,16 +561,16 @@ assert box_test_blank["guesses"] == {
 print "\n"
 print "ill_formed: " + str(solve_sudoku(ill_formed)) # --> None
 print "\n"
-print "valid: " + str(solve_sudoku(valid))      # --> grid
+print "valid: " + print_grid(solve_sudoku(valid))      # --> grid
 print "\n"
 print "invalid: " + str(solve_sudoku(invalid))    # --> False
 print "\n"
-print "very_easy: " + str(solve_sudoku(very_easy))       # --> grid
+print "very_easy: " + print_grid(solve_sudoku(very_easy))       # --> grid
 print "\n"
-print "blank: " + str(solve_sudoku(blank))       # --> grid
+print "blank: " + print_grid(solve_sudoku(blank))       # --> grid
 print "\n"
-print "easy: " + str(solve_sudoku(easy))       # --> grid
+print "easy: " + print_grid(solve_sudoku(easy))       # --> grid
 print "\n"
-print "hard:" + str(solve_sudoku(hard))       # --> grid
+print "hard:" + print_grid(solve_sudoku(hard))       # --> grid
 print "\n"
 print "impossible:" + str(solve_sudoku(impossible))       # --> grid?
