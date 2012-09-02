@@ -11,8 +11,7 @@ file_list = [
 
 # List of applications to test
 apps = [
-    "/Applications/Mou.app/Contents/MacOS/Mou",
-    "mvim"
+    "/Applications/Mou.app/Contents/MacOS/Mou"
     ]
 
 fuzz_output = "./tmp/fuzz_"
