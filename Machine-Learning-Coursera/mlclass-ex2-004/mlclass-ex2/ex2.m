@@ -79,10 +79,12 @@ pause;
 %  optimal parameters theta.
 
 %  Set options for fminunc
+%  GradObj means our function returns both the cost and the gradient in an object
 options = optimset('GradObj', 'on', 'MaxIter', 400);
 
 %  Run fminunc to obtain the optimal theta
 %  This function will return theta and the cost 
+%  @(t) ( costFunction(t, X, y) ) is a sort of function pointer shorthand
 [theta, cost] = ...
 	fminunc(@(t)(costFunction(t, X, y)), initial_theta, options);
 
