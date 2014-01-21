@@ -36,17 +36,18 @@ grad = zeros(size(theta));
 %           grad = grad + YOUR_CODE_HERE (using the temp variable)
 %
 
+J = 1./m * ( -y' * log( sigmoid(X * theta) ) - ( 1 - y' ) * log ( 1 - sigmoid( X * theta)) );
 
+thetan = [theta];
+thetan(1, 1) = 0; % theta0 not regularized
+% multiply thetan vectors such that the result is 1x1
+J = J + sum(lambda./(2 * m) .* thetan' * thetan);
 
+lambda_vector = lambda .* ones(size(theta));
+lambda_vector(1, 1) = 0; % theta0 not regularized
 
-
-
-
-
-
+grad = 1./m * X' * (sigmoid(X * theta) - y) + (theta .* lambda_vector./m);
 
 % =============================================================
-
-grad = grad(:);
 
 end

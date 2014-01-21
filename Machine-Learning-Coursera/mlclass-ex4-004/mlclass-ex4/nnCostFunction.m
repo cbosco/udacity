@@ -62,22 +62,62 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+% Part 1: cost function
+
+% compute h_theta(x)...
+% Add ones to the X data matrix (bias input)
+a1 = [ones(m, 1) X];
+
+% hidden layer
+z2 = (Theta1 * a1')';
+a2 = sigmoid(z2);
+a2 = [ones(m,1) a2]; % bias input
+% output layer
+z3 = (Theta2 * a2')';
+a3 = sigmoid(z3);
+
+% recode y labels as vectors
+y_vec = zeros(m, num_labels);
+for c = 1:num_labels
+    y_vec(:,c) = (y==c);
+end
+
+J = 1/m * sum(sum(-1*y_vec.*log(a3) - (1 - y_vec).*log(1-a3)));
 
 
+% add Regularization
+J = J + lambda/(2*m) * (sum(sum(Theta1(:,2:end).^2)) + sum(sum(Theta2(:,2:end).^2)));
 
+% Part 2: gradient
+for t = 1:m
+    % transpose all to make column vectors
+    a1_t = a1(t,:)';
+    z2_t = z2(t,:)';
+    z2_t = [1; z2_t]; % bias input
+    a2_t = a2(t,:)';
+    z3_t = z3(t,:)';
+    a3_t = a3(t,:)';
 
+    y_t = y_vec(t,:)';
 
+    delta3_t = a3_t - y_t;
 
+    delta2_t = Theta2' * delta3_t .* sigmoidGradient(z2_t);
+    delta2_t = delta2_t(2:end); % skip delta2_t_0
 
+    % accumulate
+    Theta1_grad = Theta1_grad + (delta2_t * a1_t');
+    Theta2_grad = Theta2_grad + (delta3_t * a2_t');
+end
 
+% average out
 
+Theta1_grad = 1/m * Theta1_grad;
+Theta2_grad = 1/m * Theta2_grad;
 
-
-
-
-
-
-
+% regularization, add lambda coefficient to all but first terms
+Theta1_grad += [zeros(size(Theta1_grad)(:,1),1) ((lambda/m) * Theta1(:,2:end))];
+Theta2_grad += [zeros(size(Theta2_grad)(:,1),1) ((lambda/m) * Theta2(:,2:end))];
 
 
 % -------------------------------------------------------------

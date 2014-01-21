@@ -22,11 +22,16 @@ p = zeros(size(X, 1), 1);
 %
 
 
+% Add ones to the X data matrix
+a1 = [ones(m, 1) X];
 
-
-
-
-
+% hidden layer
+z2 = (Theta1 * a1')';
+a2 = sigmoid(z2);
+% output layer
+z3 = (Theta2 * [ones(m, 1) a2]')';
+a3 = sigmoid(z3);
+[p_val, p] = max(a3, [], 2);
 
 
 % =========================================================================
